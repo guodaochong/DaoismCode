@@ -1,6 +1,6 @@
 # 工具列表
 
-> 24 个内置工具。Agent 自主选择调用。
+> 27 个内置工具。Agent 自主选择调用。
 
 ## 只读工具（自动批准）
 
@@ -19,6 +19,9 @@
 | `code_search` | **结构化代码搜索（函数/类/导入/导出/接口/类型/async/try-catch/hook/decorator）** |
 | `search_github` | **搜索 GitHub 真实代码示例（grep.app）** |
 | `scan_codebase` | **全代码库审计：安全风险/bug/性能/技术债/缺失测试** |
+| `git_archaeology` | **Git 代码考古：blame 解析 + 热点 + 稳定性 + 回退检测** |
+| `trace_flow` | **调用链追踪：AST 调用图 + 跨文件 + 循环检测** |
+| `guardian_scan` | **代码守护：13 安全规则 + 性能 + 死代码 + 类型安全** |
 | `analyze_image` | **多模态视觉：分析截图、UI、错误图片** |
 | `ask_user` | **交互选择面板 — 单选/多选（方向键+空格+回车）** |
 | `update_memory` | **更新长期项目记忆（架构决策、编码规范、已知陷阱）** |

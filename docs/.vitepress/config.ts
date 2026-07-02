@@ -5,7 +5,7 @@ export default defineConfig({
   title: 'DaoismCode',
   description: '道 — 终端原生的 AI 全自动软件工程师',
 
-  base: '/DaoismCode/',
+  base: '/DaoismCode-AI/',
 
   head: [
     ['meta', { name: 'theme-color', content: '#7c3aed' }],
@@ -35,17 +35,21 @@ export default defineConfig({
           { text: '反思记忆系统', link: '/guide/reflexion-memory' },
           { text: '多模态视觉', link: '/guide/vision' },
           { text: 'Sisyphus 模式', link: '/guide/sisyphus' },
+          { text: 'Git 考古 /why', link: '/guide/git-archaeology' },
+          { text: '调用链追踪 /flow', link: '/guide/flow-trace' },
+          { text: '代码守护者 /guard', link: '/guide/guardian' },
+          { text: '多智能体协作 /team', link: '/guide/team' },
         ],
       },
       {
         text: '参考',
         items: [
-          { text: '工具列表 (24)', link: '/guide/tools' },
-          { text: '命令列表 (23)', link: '/guide/commands' },
+          { text: '工具列表 (27)', link: '/guide/tools' },
+          { text: '命令列表 (27)', link: '/guide/commands' },
           { text: '技术白皮书', link: '/technical-report' },
         ],
       },
-      { text: 'GitHub', link: 'https://github.com/guodaochong/DaoismCode' },
+      { text: 'GitHub', link: 'https://github.com/jumpingbirds/DaoismCode-AI' },
     ],
 
     sidebar: {
@@ -71,15 +75,19 @@ export default defineConfig({
           items: [
             { text: '多模态视觉', link: '/guide/vision' },
             { text: 'Sisyphus 模式', link: '/guide/sisyphus' },
-            { text: '工具列表 (24)', link: '/guide/tools' },
-            { text: '命令列表 (23)', link: '/guide/commands' },
+            { text: 'Git 考古 /why', link: '/guide/git-archaeology' },
+            { text: '调用链追踪 /flow', link: '/guide/flow-trace' },
+            { text: '代码守护者 /guard', link: '/guide/guardian' },
+            { text: '多智能体协作 /team', link: '/guide/team' },
+            { text: '工具列表 (27)', link: '/guide/tools' },
+            { text: '命令列表 (27)', link: '/guide/commands' },
           ],
         },
       ],
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/guodaochong/DaoismCode' },
+      { icon: 'github', link: 'https://github.com/jumpingbirds/DaoismCode-AI' },
     ],
 
     search: {
