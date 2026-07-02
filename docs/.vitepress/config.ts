@@ -5,7 +5,7 @@ export default defineConfig({
   title: 'DaoismCode',
   description: '道 — 终端原生的 AI 全自动软件工程师',
 
-  base: '/DaoismCode-AI/',
+  base: '/DaoismCode/',
 
   head: [
     ['meta', { name: 'theme-color', content: '#7c3aed' }],
