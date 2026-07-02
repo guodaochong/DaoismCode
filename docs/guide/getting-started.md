@@ -11,7 +11,7 @@
 ## 安装
 
 ```bash
-git clone https://github.com/guodaochong/DaoismCode.git
+git clone https://github.com/jumpingbirds/DaoismCode-AI.git
 cd DaoismCode-AI
 pnpm install
 ```
