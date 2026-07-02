@@ -1,4 +1,4 @@
-name: Deploy VitePress to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -12,28 +12,22 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.0
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+          cache: npm
 
-      - run: pnpm install --no-frozen-lockfile
+      - run: npm install
 
-      - run: pnpm docs:build
+      - run: npx vitepress build docs
 
       - uses: actions/configure-pages@v4
 
