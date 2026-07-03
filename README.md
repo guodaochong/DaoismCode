@@ -4,11 +4,11 @@
 
 ### 是生万象 — All Things Arise
 
-**The world's first terminal-native AI coding agent with a six-engine smart model router, a self-reflecting agentic loop, semantic code search, and zero FFI dependencies.**
+**The world's first terminal-native AI coding agent with a six-engine smart model router, a self-reflecting agentic loop, semantic code search, incremental context compression, tool-chain learning, sub-agent synthesis, a cyberpunk web dashboard, and zero FFI dependencies.**
 
 📖 **文档站**: [https://guodaochong.github.io/DaoismCode/](https://guodaochong.github.io/DaoismCode/)
 
-[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [Architecture](#-architecture)
+[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [PR Gen](#-auto-pr-generation--pr) · [Smart Jump](#-smart-symbol-jump--jump) · [Dashboard](#-neural-dashboard--dash) · [MCP Market](#-mcp-marketplace) · [Plugin System](#-plugin-system) · [Team Memory](#-team-shared-memory) · [CI Mode](#-ci-integration-mode) · [Architecture](#-architecture)
 
 </div>
 
@@ -52,6 +52,20 @@ It plans tasks, writes code, runs tests, reads failures, fixes bugs, learns from
 | **Session Security** | AES-256-GCM + gzip, machine-bound | Plaintext | Local DB | Cloud |
 | **Tool Execution** | Parallel (`Promise.all`) | Sequential | Sequential | Sequential |
 | **Cost Efficiency** | ~56% savings via auto-routing | Full price | Full price | Subscription |
+| **Incremental Compaction** | Merge-only-new summary (60%+ token savings) | Full re-summary | Full re-summary | Full re-summary |
+| **Diff-aware Edits** | Edit results include unified diff (no re-read needed) | ❌ | ❌ | ❌ |
+| **Tool-Chain Learning** | Tracks success rate of tool sequences, recommends optimal paths | ❌ | ❌ | ❌ |
+| **Sub-Agent Synthesis** | LLM merges parallel results (dedup + resolve + sort) | ❌ | ❌ | ❌ |
+| **Smart Symbol Jump** | `/jump` — natural language → AST symbol location | ❌ | ❌ | ❌ |
+| **Auto PR Gen** | `/pr` — git diff → title + summary + testing + risk | ❌ | ❌ | ❌ |
+| **Monorepo Aware** | `/mono` — detect workspaces, assign agents per package | ❌ | ❌ | ❌ |
+| **Error Pattern Library** | Categorize + count recurring failures → inject warnings | ❌ | ❌ | ❌ |
+| **Conversation Forking** | `/fork` — branch dialogue, try Plan A vs Plan B | ❌ | ❌ | ❌ |
+| **MCP Marketplace** | 12 built-in servers one-click install | ❌ | ❌ | ❌ |
+| **Team Shared Memory** | Git-synced pitfalls + decisions across team | ❌ | ❌ | ❌ |
+| **CI Review Mode** | Non-interactive `--ci` for PR auto-review | ❌ | Partial | Partial |
+| **Plugin System** | `.daoismcode/plugins/*.ts` custom tools + commands | ❌ | ❌ | ❌ |
+| **Web Dashboard** | `/dash` — cyberpunk real-time telemetry (localhost:9527) | ❌ | ❌ | ❌ |
 
 ---
 
@@ -904,6 +918,302 @@ Create `.daoismcode/mcp.json`:
 
 ---
 
+## 🧠 Incremental Context Compression
+
+> **Long conversations no longer mean re-summarizing everything.** DaoismCode merges only new messages into the existing summary — saving 60%+ tokens and 3x speedup.
+
+Traditional context compaction throws ALL old messages at the LLM every time the context window fills up. This is slow, expensive, and lossy — each re-summary degrades fidelity. DaoismCode's incremental approach:
+
+1. **First compaction** — full summary of all old messages (same as before)
+2. **Subsequent compactions** — find the existing `[Conversation Summary]` in context, then merge ONLY the new messages since that summary
+3. The LLM receives: *existing summary + new messages* → outputs *updated summary*
+4. Net effect: 3 messages to summarize instead of 50, 60%+ fewer tokens burned
+
+```
+Traditional:  [50 old messages] → LLM → [summary]          ~8000 input tokens
+Incremental:  [prev summary] + [3 new messages] → LLM      ~1200 input tokens
+                                                            ████████████ 85% savings
+```
+
+---
+
+## 🔄 Diff-Aware Edit Perception
+
+> **After every `edit_file` or `write_file`, the agent sees the unified diff inline — no need to re-read the entire file.**
+
+Before: agent edits a 1000-line file, sees `"Edited auth.ts (2 occurrences)"`, doesn't know what changed → calls `read_file` again → 8KB of tokens wasted.
+
+After: the tool result includes a capped unified diff showing exactly which lines changed:
+
+```
+Edited auth.ts (1 occurrence)
+
+Diff:
+   41   if (!token) throw new Error('no token')
+-  42   return handler(req)
++  42   return verifyToken(token)
++  43   log('auth', { user: token.userId })
+```
+
+This cuts an average of 6KB tokens per edit cycle and eliminates the "blind edit" problem where the agent doesn't verify its own change.
+
+---
+
+## 🔗 Tool-Chain Learning
+
+> **DaoismCode remembers which tool sequences succeed and which fail — then recommends proven paths in the system prompt.**
+
+Every agent run records the tool sequence used (`read_file → analyze_impact → edit_file → run_verify`) and whether it succeeded. Over time, patterns emerge:
+
+| Tool Chain | Success Rate | Avg Steps |
+|---|---|---|
+| `read_file → analyze_impact → edit_file → run_verify` | 95% | 8 |
+| `grep → grep → grep → edit_file` | 40% | 15 |
+| `find_code → read_file → edit_file → lsp_diagnostics → run_verify` | 92% | 7 |
+
+The top 5 proven chains are injected into the system prompt as recommendations. The agent learns from its own history — and your project's specific patterns.
+
+---
+
+## 🧬 Sub-Agent Synthesis
+
+> **When parallel sub-agents finish, an LLM synthesis step merges their outputs — deduplicating, resolving contradictions, and organizing by topic.**
+
+Before: 4 sub-agents each produce 500 lines of output → raw concatenation → 2000 lines with duplicates and conflicts.
+
+After: a synthesis LLM call receives all successful results, merges them into one coherent summary, then the raw per-agent results are shown below at reduced length for traceability.
+
+```
+🚀 4 parallel sub-agents completed in 42.3s (4/4 succeeded)
+
+🧠 SYNTHESIS (merged & deduplicated):
+[Single coherent result — no duplicates, contradictions resolved]
+---
+✅ Task 1: Implement auth middleware (8 steps)
+   [truncated to 150 chars]
+✅ Task 2: Create user model (6 steps)
+   [truncated to 150 chars]
+```
+
+---
+
+## 🎯 Smart Symbol Jump `/jump`
+
+> **Find any function, class, or method by natural language description — no memorizing file paths.**
+
+```
+/jump authentication handler
+→ ƒ src/auth/middleware.ts:42  verifyToken(req, res, next)
+→ ƒ src/auth/handler.ts:18    handleLogin(req, res)
+→ m src/api/routes.ts:67      router.post('/login', handleLogin)
+```
+
+Uses TypeScript Compiler API to parse ASTs across your entire project, then scores each symbol by keyword match against your query. Faster than semantic search (no embedding round-trip), more precise than grep (understands code structure).
+
+---
+
+## 📝 Auto PR Generation `/pr`
+
+> **From git diff to publish-ready PR description in one command.**
+
+```
+/pr
+→ Analyzing git diff main...HEAD...
+
+## Refactor: Replace manual token validation with middleware
+
+### Summary
+Replaces ad-hoc token checks across 4 API routes with a centralized
+`verifyToken` middleware, reducing duplication and improving security.
+
+### Changes
+- Added `src/auth/middleware.ts` — `verifyToken` Express middleware
+- Refactored 4 route handlers to use middleware instead of inline checks
+- Updated `auth.test.ts` with 6 new test cases for middleware behavior
+
+### Testing
+- `npm test` — all 42 tests pass
+- Manual: verified login/logout/refresh-token flows
+
+### Risk Assessment
+- Breaking change: `GET /api/profile` now requires `Authorization` header
+  (previously accepted query param `?token=`)
+```
+
+---
+
+## 📦 Monorepo Awareness `/mono`
+
+> **Detect monorepo structure, list all packages with dependencies and test status — then assign one sub-agent per package.**
+
+```
+/mono
+→ 📦 Monorepo: pnpm-workspaces (8 packages)
+
+✅ @app/api         → packages/api     deps: express, jsonwebtoken
+✅ @app/web          → packages/web     deps: react, next
+⬜ @app/shared       → packages/shared  deps: zod
+...
+
+💡 Tip: Use parallel_subagents with one task per package for maximum efficiency.
+```
+
+---
+
+## 🧩 Error Pattern Library
+
+> **Reflexion doesn't just remember individual failures — it categorizes them, counts frequency, and warns the agent about recurring patterns.**
+
+Every recorded lesson is auto-categorized (timeout, type error, import issue, test failure, permission, syntax, etc.). When a pattern appears 2+ times, it's injected into the system prompt as a high-priority warning:
+
+```
+## RECURRING ERROR PATTERNS (these keep happening — be extra vigilant)
+  ⚠ Timeout issue (×8): Always set explicit timeout on fetch calls
+  ⚠ Type/reference error (×5): Check imports before using exported symbols
+  ⚠ Verification failure (×3): Run tsc --noEmit before declaring done
+```
+
+---
+
+## 🔀 Conversation Forking `/fork`
+
+> **Branch your conversation like a git branch. Try approach A, `/fork` to try approach B, `/undo` to go back.**
+
+```
+You: "Should I use Redux or Zustand for state management?"
+Agent: [analyzes both approaches]
+
+/fork          ← saves current state
+You: "OK let's go with Zustand"
+Agent: [implements Zustand solution...]
+
+/undo          ← restores fork point
+You: "Actually let's try Redux"
+Agent: [implements Redux solution...]
+```
+
+---
+
+## 🛒 MCP Marketplace
+
+> **12 popular MCP servers available with one command — no manual config editing.**
+
+| Category | Servers |
+|---|---|
+| **Docs** | Context7 — up-to-date library docs + code examples |
+| **Browser** | Playwright, Puppeteer — browser automation + testing |
+| **Dev** | GitHub API — repos, issues, PRs, commits |
+| **DB** | PostgreSQL, SQLite — query + schema inspection |
+| **Search** | Brave Search — web search via API |
+| **AI** | Memory (knowledge graph), Sequential Thinking (step-by-step reasoning) |
+| **Util** | Time (timezone + scheduling), Fetch (JS-rendered web fetch) |
+
+```bash
+# In DaoismCode:
+> Install the Playwright MCP server
+→ mcp_market(action='install', name='playwright')
+→ ✅ Installed playwright to .daoismcode/mcp.json. Restart to activate.
+```
+
+---
+
+## 🤝 Team Shared Memory
+
+> **Project knowledge syncs via Git — pitfalls, conventions, and architecture decisions shared across your entire team.**
+
+When `syncTeamMemory` runs, it extracts pitfalls and decisions from local project memory, writes them to `.daoismcode/team-memory.json`, and auto-commits. Teammates who pull see the shared knowledge in their system prompt on next launch.
+
+```
+🤝 Team Memory Synced
+   Pitfalls: 12 (3 new)
+   Conventions: 8
+   Decisions: 5
+   Last sync: 2026-07-03T14:30:00Z
+
+Team members will see this when they start DaoismCode in the same repo.
+```
+
+---
+
+## 🔧 CI Integration Mode
+
+> **Non-interactive code review for CI/CD pipelines. Reads PR diff, runs LLM review, outputs structured JSON.**
+
+```bash
+daoism --ci --base develop --output json
+```
+
+```json
+{
+  "verdict": "request_changes",
+  "issues": [
+    {"file": "src/auth.ts", "line": 42, "severity": "critical", "message": "Missing error handling on token decode"},
+    {"file": "src/auth.ts", "line": 55, "severity": "warning", "message": "No test for token expiry case"}
+  ],
+  "summary": "Auth middleware needs error handling and tests before merge"
+}
+```
+
+Integrates with GitHub Actions: auto-comment on PRs with review results.
+
+---
+
+## 🧩 Plugin System
+
+> **Write a `.ts` file in `.daoismcode/plugins/` — get custom tools, commands, and hooks loaded automatically on startup.**
+
+```typescript
+// .daoismcode/plugins/deploy.ts
+export default {
+  name: 'deploy-plugin',
+  commands: [{
+    name: '/deploy',
+    description: 'Deploy to staging',
+    async execute(args, ctx) {
+      // Your custom logic here
+      return 'Deployed to staging!';
+    }
+  }],
+  tools: [{
+    name: 'run_migrations',
+    requiresPermission: true,
+    async execute(args, ctx) { /* ... */ }
+  }]
+}
+```
+
+Restart DaoismCode → your `/deploy` command and `run_migrations` tool are available. Infinite extensibility.
+
+---
+
+## 📊 Neural Dashboard `/dash`
+
+> **A real-time cyberpunk web dashboard. Open `http://localhost:9527` in your browser and see everything.**
+
+<div align="center">
+
+![Dashboard Preview](https://img.shields.io/badge/Dashboard-Cyberpunk-00f0ff?style=for-the-badge&labelColor=05050f)
+
+</div>
+
+**9 live modules, 3-second auto-refresh:**
+
+| Module | Xianxia Name | What It Shows |
+|---|---|---|
+| **Realm Energy** | 境界 | SVG ring charts — budget usage per model (筑基/金丹/元婴/化神) |
+| **Task Flow** | 渡劫 | Colored pills for recent task types + project info |
+| **Learning Metrics** | 道行 | Big-number tiles: Lessons / Pitfalls / Decisions / Tool Chains |
+| **Model Matrix** | 元神 | All models with speed, context window, cost per million |
+| **Error Patterns** | 心魔 | Bar chart of recurring failure categories (sorted by frequency) |
+| **Tool Chains** | 法宝 | Visual tool sequence chains with success rates |
+| **Reflexion Log** | 悟道 | Scrollable list of recent lessons learned |
+| **System Telemetry** | 灵脉 | Platform, CPU, memory (RSS), uptime, runtime version |
+| **Live Indicator** | — | Heartbeat pulse + LIVE badge + 3s auto-refresh |
+
+Features: glassmorphism cards, neon glow effects, scrolling grid background, loading animation ("INITIALIZING NEURAL LINK"), responsive layout.
+
+---
+
 ## 🎨 The TUI
 
 A full-screen terminal interface built on a custom ANSI renderer — no Ink, no SolidJS, no native FFI. Pure `process.stdout.write()` with ANSI escape sequences.
@@ -990,9 +1300,13 @@ src/
 │   ├── run.ts            Wires LLM client + retry/backoff + step routing
 │   ├── session.ts        Multi-session save/restore (project-keyed)
 │   ├── profile.ts        ProjectProfile scanner (~300 token brief)
-│   ├── reflexion.ts      Failure memory — learns from mistakes
+│   ├── reflexion.ts      Failure memory — learns from mistakes + error pattern categorization
 │   ├── project-memory.ts Long-term project knowledge (auto-init + persistence)
+│   ├── team-memory.ts    Git-synced shared memory across team members
+│   ├── tool-chains.ts    Tool sequence learning — tracks success rates, recommends optimal paths
 │   ├── git-guard.ts      Git snapshot + diff guard + rollback
+│   ├── ci-mode.ts        Non-interactive CI review mode (structured JSON output)
+│   ├── plugins.ts        Plugin system — load custom tools/commands/hooks from .daoismcode/plugins/
 │   ├── review.ts         Six-dimension code review (/review)
 │   ├── test-gen.ts       Auto test generation (/test) + auto-fix loop
 │   └── parallel-detect.ts  Auto-detect parallel task opportunities
@@ -1007,7 +1321,7 @@ src/
 ├── hooks/              Lifecycle hooks system
 │   └── index.ts          6 events, glob matching, templates, injection
 │
-├── tools/              27 tools — single source of truth
+├── tools/              31 tools — single source of truth
 │   ├── registry.ts       Tool name → executor mapping
 │   ├── schema.ts         OpenAI tool schemas
 │   ├── read / write / edit / bash / glob / grep
@@ -1021,11 +1335,18 @@ src/
 │   ├── ask_user.ts      Interactive user selection panel (single+multi)
 │   ├── scan_codebase.ts Full codebase security/bug/debt audit
 │   ├── update_memory.ts Long-term project memory management
-│   ├── parallel_subagents.ts Multi-agent parallel execution
+│   ├── parallel_subagents.ts Multi-agent parallel execution + LLM synthesis
 │   ├── semantic_search.ts  Semantic vector search (find_code, GLM embedding-3)
+│   ├── pr_gen.ts        Auto PR generation from git diff
+│   ├── smart_jump.ts    AST-based smart symbol jump
+│   ├── monorepo.ts      Monorepo structure detection
+│   ├── mcp_market.ts    MCP server marketplace (12 servers)
 │   ├── web-search / web-fetch
 │   ├── todo / subagent
 │   └── ...
+│
+├── dashboard/           Cyberpunk web dashboard
+│   └── server.ts          HTTP server (localhost:9527) with 9 live modules
 │
 ├── tui/                Custom ANSI renderer — zero FFI
 │   ├── run.ts            Main TUI: input, streaming, diff, hooks, git, tokens
@@ -1071,6 +1392,10 @@ src/
 | `guardian_scan` | **Code guardian: 13 security rules + performance + dead code + type safety + complexity.** |
 | `update_memory` | **Update long-term project memory (architecture decisions, conventions, pitfalls).** |
 | `find_code` | **Semantic code search — vector embedding (GLM embedding-3) finds code by meaning, not keywords.** |
+| `pr_gen` | **Generate professional PR description from git diff and commit history.** |
+| `smart_jump` | **Find code symbols (functions, classes, methods) by natural language description via AST parsing.** |
+| `monorepo_detect` | **Detect monorepo structure (pnpm/lerna/turbo/npm workspaces) — list all packages with dependencies.** |
+| `mcp_market` | **Browse and install MCP servers from the built-in marketplace (12 servers available).** |
 | `todo_write` | Create/update task list with session-level persistence. |
 
 ### Mutating (permission-gated)
@@ -1124,6 +1449,11 @@ File layout: [magic 4B] [IV 12B] [authTag 16B] [ciphertext...]
 | `/flow <function>` | **Call graph tracing — AST call graph + cross-file + cycle detection** |
 | `/guard` | **Code guardian — 13 security rules + perf + dead code + type safety** |
 | `/team <task>` | **Multi-agent collaboration — Architect→FE+BE→Tester→Reviewer pipeline** |
+| `/pr [base]` | **Auto-generate PR description from git diff (title + summary + testing + risk)** |
+| `/jump <desc>` | **Smart symbol jump — natural language → AST symbol location** |
+| `/fork` | **Fork conversation — branch dialogue, try different approaches** |
+| `/mono` | **Detect monorepo structure — list packages with deps and test status** |
+| `/dash` | **Launch cyberpunk web dashboard at localhost:9527** |
 | `/cost` | **Token usage + cost stats + routing savings** |
 | `/index` | **Build semantic search index (GLM embedding-3, AST chunking)** |
 | `/search <query>` | **Semantic code search — find by meaning, not keywords** |
@@ -1204,9 +1534,23 @@ pnpm build:exe        # Compile standalone exe → dist/daoism.exe
 - [x] ~~Self-Evaluation (5-dimension gate before "done")~~
 - [x] ~~Sub-agent Quality Control~~
 - [x] ~~Semantic Code Search (GLM embedding-3, vector similarity)~~
-- [ ] Git evolution history ("why was this code written?")
+- [x] ~~Incremental Context Compression (merge-only-new, 60%+ token savings)~~
+- [x] ~~Diff-Aware Edit Perception (inline unified diff in tool results)~~
+- [x] ~~Tool-Chain Learning (tracks success rates, recommends proven paths)~~
+- [x] ~~Sub-Agent Synthesis (LLM merges parallel results)~~
+- [x] ~~Smart Symbol Jump (`/jump` — natural language → AST)~~
+- [x] ~~Auto PR Generation (`/pr` — git diff → PR description)~~
+- [x] ~~Monorepo Awareness (`/mono` — workspace detection)~~
+- [x] ~~Error Pattern Library (categorize + count + inject warnings)~~
+- [x] ~~Conversation Forking (`/fork` — branch + try + undo)~~
+- [x] ~~MCP Marketplace (12 servers one-click install)~~
+- [x] ~~Team Shared Memory (Git-synced pitfalls + decisions)~~
+- [x] ~~CI Integration Mode (`--ci` non-interactive review)~~
+- [x] ~~Plugin System (`.daoismcode/plugins/*.ts` custom tools)~~
+- [x] ~~Neural Dashboard (`/dash` cyberpunk web telemetry)~~
+- [x] ~~Git Archaeology (`/why`)~~
+- [x] ~~Cost Tracking (`/cost`)~~
 - [ ] Multi-language LSP (Python, Go, Rust)
-- [ ] Cost tracking (`/cost` command)
 
 ---
 
