@@ -20,7 +20,7 @@ The standard agentic loop lets the agent decide when it's "done." But agents oft
 /goal fix all TypeScript errors, stop after 3
 ```
 
-Then type your task normally. After the agent declares "done":
+The goal is set **and the agent starts working immediately** — no need to type the task separately. The goal description IS the task. After the agent declares "done", the evaluator kicks in.
 
 1. **Quantitative verification** auto-runs
 2. **Evaluator model** checks achievement

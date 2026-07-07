@@ -8,7 +8,7 @@
 
 📖 **文档站**: [https://guodaochong.github.io/DaoismCode/](https://guodaochong.github.io/DaoismCode/)
 
-[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [PR Gen](#-auto-pr-generation--pr) · [Smart Jump](#-smart-symbol-jump--jump) · [Goal Loop](#-goal-driven-loop-goal) · [Time Loop](#-time-driven-loop-loop) · [Dashboard](#-neural-dashboard--dash) · [MCP Market](#-mcp-marketplace) · [Plugin System](#-plugin-system) · [Team Memory](#-team-shared-memory) · [CI Mode](#-ci-integration-mode) · [Architecture](#-architecture)
+[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [PR Gen](#-auto-pr-generation--pr) · [Smart Jump](#-smart-symbol-jump--jump) · [Goal Loop](#-goal-driven-loop-goal) · [Time Loop](#-time-driven-loop-loop) · [Auto-Fix Watch](#-auto-fix-on-save-watch) · [Dashboard](#-neural-dashboard--dash) · [MCP Market](#-mcp-marketplace) · [Plugin System](#-plugin-system) · [Team Memory](#-team-shared-memory) · [CI Mode](#-ci-integration-mode) · [Architecture](#-architecture)
 
 </div>
 
@@ -1270,6 +1270,41 @@ Inspired by [Claude Code's loop taxonomy](https://claude.com/blog/getting-starte
 
 ---
 
+## 👁 Auto-Fix on Save `/watch`
+
+> **Save a file → DaoismCode detects errors → fixes them automatically → commits.**
+
+A real-time file watcher that turns DaoismCode into a 24/7 pair programmer. No other AI coding tool does this — Cursor does inline completion, Copilot suggests snippets, but neither autonomously fixes your files on save.
+
+```
+/watch              — watch all source files
+/watch src/**/*.ts  — watch specific patterns only
+/watch stop         — stop watching
+/watch status       — show fix stats
+```
+
+**How it works:**
+
+1. **Polling** (3s interval, mtime-based, cross-platform — no `fs.watch` inconsistencies)
+2. **Debounce** (2s after last save — prevents rapid-save storms)
+3. **Targeted verification** by file type:
+
+| File type | Verification command |
+|---|---|
+| `.ts` `.tsx` `.js` `.jsx` | `npx tsc --noEmit` |
+| `.py` | `python -m py_compile <file>` |
+| `.go` | `go build ./...` |
+| `.rs` | `cargo check` |
+
+4. **Error extraction** — only extracts errors relevant to the changed file (not full output)
+5. **Minimal fix** — agent prompt: "Fix ONLY these errors, do NOT refactor unrelated code"
+6. **Auto-commit** on success: `fix(watch): auto-fix <file>`
+7. **Safety** — destructive commands (`rm -rf`, `git push --force`, `git reset --hard`) are blocked
+
+**Ignored directories:** `node_modules`, `.git`, `dist`, `build`, `.daoismcode`, `__pycache__`, `.next`, `.nuxt`, `target`, `vendor`, `.cache`
+
+---
+
 ## 🎨 The TUI
 
 A full-screen terminal interface built on a custom ANSI renderer — no Ink, no SolidJS, no native FFI. Pure `process.stdout.write()` with ANSI escape sequences.
@@ -1513,6 +1548,7 @@ File layout: [magic 4B] [IV 12B] [authTag 16B] [ciphertext...]
 | `/goal <criteria> [stop after N]` | **Goal-driven loop — independent evaluator + quantitative verification** |
 | `/loop <interval> <prompt>` | **Time-driven loop — full agent per tick, adaptive interval, smart stop** |
 | `/sync` | **Sync team shared memory via git** |
+| `/watch [pattern]` | **Auto-fix on save — file watcher + targeted verification + minimal fix + auto-commit** |
 | `/cost` | **Token usage + cost stats + routing savings** |
 | `/index` | **Build semantic search index (GLM embedding-3, AST chunking)** |
 | `/search <query>` | **Semantic code search — find by meaning, not keywords** |
