@@ -8,7 +8,7 @@
 
 📖 **文档站**: [https://guodaochong.github.io/DaoismCode/](https://guodaochong.github.io/DaoismCode/)
 
-[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [PR Gen](#-auto-pr-generation--pr) · [Smart Jump](#-smart-symbol-jump--jump) · [Dashboard](#-neural-dashboard--dash) · [MCP Market](#-mcp-marketplace) · [Plugin System](#-plugin-system) · [Team Memory](#-team-shared-memory) · [CI Mode](#-ci-integration-mode) · [Architecture](#-architecture)
+[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [PR Gen](#-auto-pr-generation--pr) · [Smart Jump](#-smart-symbol-jump--jump) · [Goal Loop](#-goal-driven-loop-goal) · [Time Loop](#-time-driven-loop-loop) · [Dashboard](#-neural-dashboard--dash) · [MCP Market](#-mcp-marketplace) · [Plugin System](#-plugin-system) · [Team Memory](#-team-shared-memory) · [CI Mode](#-ci-integration-mode) · [Architecture](#-architecture)
 
 </div>
 
@@ -1214,6 +1214,62 @@ Features: glassmorphism cards, neon glow effects, scrolling grid background, loa
 
 ---
 
+## 🎯 Goal-Driven Loop `/goal`
+
+> **Don't let the agent declare "done" until the goal is ACTUALLY achieved.**
+
+Inspired by [Claude Code's loop taxonomy](https://claude.com/blog/getting-started-with-loops). When you define success criteria, a separate evaluator model verifies the goal is met — with quantitative checks.
+
+```
+/goal fix all TypeScript errors, stop after 3
+（then describe your task normally）
+```
+
+**How it works:**
+
+1. Agent works normally → declares "done"
+2. **Quantitative verification** auto-runs (reads `package.json` → detects test/typecheck/lint command → executes cross-platform via `execa`)
+3. **Evaluator model** (adaptive: simple goals → glm-4.7, complex goals → glm-5.2) checks goal achievement using:
+   - The agent's summary
+   - Full conversation context (tool results, not truncated)
+   - **Quantitative verification output** (GROUND TRUTH — overrides LLM judgment)
+   - Previous attempt history (avoids repeating feedback)
+4. If goal NOT achieved → agent sent back with **specific missing criteria** + relevant past lessons
+5. If goal achieved but **confidence < 70%** → agent sent back for stronger evidence
+6. Repeat until goal achieved (≥70% confidence) or max attempts reached
+
+**Quantitative override:** If all quantitative checks fail but the evaluator says "achieved" → **forced override to FAIL**. The evaluator cannot override hard test results.
+
+**Goal decomposition:** Complex goals (containing `，` / `然后` / `and then`) are split into sub-goals for clearer tracking.
+
+---
+
+## 🔄 Time-Driven Loop `/loop`
+
+> **Run a task on a recurring interval — with full agent capabilities, not just a chat bot.**
+
+```
+/loop 5m check CI status and fix failures, stop when all tests pass
+```
+
+**How it works:**
+
+1. Every interval, a **full agent loop** runs (with all 31 tools — read, edit, bash, verify, etc.)
+2. **State accumulation:** each iteration knows what happened in previous iterations
+3. **Adaptive interval:** consecutive "no change" → interval increases up to 4×; activity detected → resets to base
+4. **Model downgrade:** routine checks use glm-4.7 (cheap, 5 steps); when action needed → upgrades to glm-5.2 (15 steps, 2 fix attempts)
+5. **Smart stop conditions:** `stop when tests pass` / `stop when CI green` / `stop when merged` / custom string match
+6. **Error backoff:** 3 consecutive errors → interval doubles
+7. **Skip on stale:** 3 consecutive "no change" → skip one iteration entirely
+
+**Loop management:**
+- `/loop` — show active loops with iteration count
+- `/loop stop` — cancel all loops
+- Loops run in background (`.unref()`) — don't block process exit
+- Minimum interval: 10 seconds (safety)
+
+---
+
 ## 🎨 The TUI
 
 A full-screen terminal interface built on a custom ANSI renderer — no Ink, no SolidJS, no native FFI. Pure `process.stdout.write()` with ANSI escape sequences.
@@ -1454,6 +1510,9 @@ File layout: [magic 4B] [IV 12B] [authTag 16B] [ciphertext...]
 | `/fork` | **Fork conversation — branch dialogue, try different approaches** |
 | `/mono` | **Detect monorepo structure — list packages with deps and test status** |
 | `/dash` | **Launch cyberpunk web dashboard at localhost:9527** |
+| `/goal <criteria> [stop after N]` | **Goal-driven loop — independent evaluator + quantitative verification** |
+| `/loop <interval> <prompt>` | **Time-driven loop — full agent per tick, adaptive interval, smart stop** |
+| `/sync` | **Sync team shared memory via git** |
 | `/cost` | **Token usage + cost stats + routing savings** |
 | `/index` | **Build semantic search index (GLM embedding-3, AST chunking)** |
 | `/search <query>` | **Semantic code search — find by meaning, not keywords** |

@@ -43,6 +43,7 @@ export default defineConfig({
           { text: '工具链学习', link: '/guide/tool-chains' },
           { text: '智能跳转 /jump', link: '/guide/smart-jump' },
           { text: 'PR生成 /pr', link: '/guide/pr-gen' },
+          { text: '目标/时间循环', link: '/guide/goal-loop' },
           { text: '神经仪表盘 /dash', link: '/guide/dashboard' },
           { text: '插件系统', link: '/guide/plugins' },
           { text: 'MCP市场', link: '/guide/mcp-market' },
@@ -52,7 +53,7 @@ export default defineConfig({
         text: '参考',
         items: [
           { text: '工具列表 (31)', link: '/guide/tools' },
-          { text: '命令列表 (32)', link: '/guide/commands' },
+            { text: '命令列表 (35)', link: '/guide/commands' },
           { text: '技术白皮书', link: '/technical-report' },
         ],
       },
@@ -95,6 +96,7 @@ export default defineConfig({
             { text: '工具链学习', link: '/guide/tool-chains' },
             { text: '智能跳转 /jump', link: '/guide/smart-jump' },
             { text: 'PR生成 /pr', link: '/guide/pr-gen' },
+            { text: '目标驱动/时间驱动循环', link: '/guide/goal-loop' },
             { text: '神经仪表盘 /dash', link: '/guide/dashboard' },
             { text: '插件系统', link: '/guide/plugins' },
             { text: 'MCP市场', link: '/guide/mcp-market' },
@@ -104,7 +106,7 @@ export default defineConfig({
           text: '参考',
           items: [
             { text: '工具列表 (31)', link: '/guide/tools' },
-            { text: '命令列表 (32)', link: '/guide/commands' },
+          { text: '命令列表 (35)', link: '/guide/commands' },
           ],
         },
       ],
