@@ -8,7 +8,7 @@
 
 📖 **文档站**: [https://guodaochong.github.io/DaoismCode/](https://guodaochong.github.io/DaoismCode/)
 
-[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [PR Gen](#-auto-pr-generation--pr) · [Smart Jump](#-smart-symbol-jump--jump) · [Goal Loop](#-goal-driven-loop-goal) · [Time Loop](#-time-driven-loop-loop) · [Auto-Fix Watch](#-auto-fix-on-save-watch) · [Dashboard](#-neural-dashboard--dash) · [MCP Market](#-mcp-marketplace) · [Plugin System](#-plugin-system) · [Team Memory](#-team-shared-memory) · [CI Mode](#-ci-integration-mode) · [Architecture](#-architecture)
+[Smart Routing](#-smart-model-routing-v3) · [Vision](#-multimodal-vision--paste) · [Agentic Loop](#-agentic-loop--plan-execute-verify-fix) · [Sisyphus](#-sisyphus-mode) · [Parallel Agents](#-parallel-sub-agents) · [Reflexion](#-reflexion-memory) · [Semantic Search](#-semantic-code-search--index--search-find_code) · [Test Gen](#-auto-test-generation--test) · [Code Review](#-code-review--review) · [Git Archaeology](#-git-archaeology--why) · [Flow Trace](#-code-flow-tracing--flow) · [Guardian](#-background-code-guardian--guard) · [Multi-Agent Team](#-multi-agent-collaboration--team) · [PR Gen](#-auto-pr-generation--pr) · [Smart Jump](#-smart-symbol-jump--jump) · [Goal Loop](#-goal-driven-loop-goal) · [Time Loop](#-time-driven-loop-loop) · [Auto-Fix Watch](#-auto-fix-on-save-watch) · [Arena](#-multi-agent-arena-arena) · [Dashboard](#-neural-dashboard--dash) · [MCP Market](#-mcp-marketplace) · [Plugin System](#-plugin-system) · [Team Memory](#-team-shared-memory) · [CI Mode](#-ci-integration-mode) · [Architecture](#-architecture)
 
 </div>
 
@@ -1305,6 +1305,38 @@ A real-time file watcher that turns DaoismCode into a 24/7 pair programmer. No o
 
 ---
 
+## 🏟 Multi-Agent Arena `/arena`
+
+> **3 agents compete on the same task. A judge picks the winner. The only multi-agent competition in any coding tool.**
+
+```
+/arena 实现一个限流器
+```
+
+**How it works:**
+
+1. **3 agents** solve the task in parallel, each with a different strategy:
+
+| Agent | Strategy | Optimizes for |
+|---|---|---|
+| 🟢 Approach A | Simplest, most readable implementation | Readability + correctness |
+| 🔵 Approach B | Production-grade, edge cases from start | Reliability + completeness |
+| 🟣 Approach C | Creative, unconventional, advanced patterns | Elegance + innovation |
+
+2. Each agent runs independently (12 steps max, full tool access — read, edit, bash, verify)
+3. **Judge model** (glm-5.2) evaluates all solutions on:
+   - Correctness (does it work? edge cases handled?)
+   - Code quality (clean, readable, matches patterns?)
+   - Completeness (tests? error handling? docs?)
+   - Efficiency (performant? no unnecessary complexity?)
+4. **Winner is selected** — judge provides scores + reasoning. Equal solutions → simpler one wins.
+
+**Real-time progress:** Each agent shows step count + status in the TUI.
+
+No other AI coding tool offers multi-agent competition. Claude Code, Codex, Cursor, OpenCode — all are single-agent.
+
+---
+
 ## 🎨 The TUI
 
 A full-screen terminal interface built on a custom ANSI renderer — no Ink, no SolidJS, no native FFI. Pure `process.stdout.write()` with ANSI escape sequences.
@@ -1549,6 +1581,7 @@ File layout: [magic 4B] [IV 12B] [authTag 16B] [ciphertext...]
 | `/loop <interval> <prompt>` | **Time-driven loop — full agent per tick, adaptive interval, smart stop** |
 | `/sync` | **Sync team shared memory via git** |
 | `/watch [pattern]` | **Auto-fix on save — file watcher + targeted verification + minimal fix + auto-commit** |
+| `/arena <task>` | **Multi-agent competition — 3 agents parallel, judge picks best solution** |
 | `/cost` | **Token usage + cost stats + routing savings** |
 | `/index` | **Build semantic search index (GLM embedding-3, AST chunking)** |
 | `/search <query>` | **Semantic code search — find by meaning, not keywords** |
