@@ -59,20 +59,29 @@ features:
 
 | 能力 | DaoismCode | Claude Code | Cursor | Devin |
 |---|:---:|:---:|:---:|:---:|
+| **底层模型** | GLM-5.2/4.7 | Claude 4 (最强) | 多模型可选 | Claude 4 |
+| **模型质量** | Good | **Best** | Best | Best |
+| **费用** | **免费** | $20/月 | $20/月 | $500/月 |
 | **六引擎智能路由** | ✅ | ❌ | ❌ | ❌ |
-| **五维完成门控** | ✅ | 基础 | ❌ | 高级 |
-| **语义代码搜索** | ✅ | ❌ | ❌ | ❌ |
-| **反思记忆学习** | ✅ | ❌ | ❌ | ❌ |
-| **自动并行子智能体** | ✅ | ❌ | ❌ | ❌ |
-| **Sisyphus 1500步** | ✅ | ❌ | ❌ | ❌ |
-| **多模态视觉 `/paste`** | ✅ | ✅ | ✅ | ✅ |
-| **六维代码审查** | ✅ | ❌ | 部分 | 部分 |
-| **自动测试生成** | ✅ | ❌ | ❌ | ❌ |
+| **Agentic Loop** | Plan→Verify→Fix | Advanced | Inline补全 | Advanced |
+| **并行子智能体** | ✅ | ✅ | ❌ | ✅ |
+| **多智能体竞技 `/arena`** | ✅ | ❌ | ❌ | ❌ |
+| **目标驱动 `/goal`** | ✅ 量化验证 | ✅ LLM验证 | ❌ | ❌ |
+| **定时循环 `/loop`** | ✅ 全Agent/轮 | ✅ 裸LLM | ❌ | ❌ |
+| **保存即修复 `/watch`** | ✅ | ❌ | ❌ | ❌ |
+| **反思记忆学习** | ✅ | ✅ | ❌ | ❌ |
+| **语义代码搜索** | ✅ | ❌ | ✅ | ❌ |
+| **六维代码审查** | ✅ | ✅ | 部分 | ✅ |
+| **自动测试生成** | ✅ | ❌ | ✅ | ❌ |
 | **代码库全扫描** | ✅ | ❌ | ❌ | ❌ |
-| **跨文件影响分析** | ✅ | ❌ | ❌ | 部分 |
-| **Provider 无关** | ✅ | 锁定 | 锁定 | 锁定 |
+| **Git考古 `/why`** | ✅ | ❌ | ❌ | ❌ |
+| **Web Dashboard** | ✅ | ❌ | ❌ | ✅ |
+| **MCP 生态** | 12 servers | **100+** | ❌ | ❌ |
+| **IDE 集成** | ❌ | VS Code | **原生IDE** | ❌ |
+| **浏览器控制** | ❌ | ✅ | ❌ | ✅ |
+| **中文原生支持** | ✅ | ⚠️ 英文优先 | ⚠️ 英文优先 | ⚠️ 英文优先 |
+| **开源** | ✅ MIT | ✅ | ❌ | ❌ |
 | **部署形态** | 103MB .exe | npm | 桌面 | 云SaaS |
-| **会话加密** | AES-256 | 明文 | 本地DB | 云端 |
 
 ## 核心数字
 
@@ -82,11 +91,11 @@ features:
     <div style="color: var(--vp-c-text-2); font-size: 0.9rem;">行 TypeScript</div>
   </div>
   <div style="text-align: center;">
-    <div style="font-size: 3rem; font-weight: 800; background: linear-gradient(120deg, #7c3aed, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">24</div>
+    <div style="font-size: 3rem; font-weight: 800; background: linear-gradient(120deg, #7c3aed, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">31</div>
     <div style="color: var(--vp-c-text-2); font-size: 0.9rem;">个内置工具</div>
   </div>
   <div style="text-align: center;">
-    <div style="font-size: 3rem; font-weight: 800; background: linear-gradient(120deg, #7c3aed, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">23</div>
+    <div style="font-size: 3rem; font-weight: 800; background: linear-gradient(120deg, #7c3aed, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">37</div>
     <div style="color: var(--vp-c-text-2); font-size: 0.9rem;">个斜杠命令</div>
   </div>
   <div style="text-align: center;">
