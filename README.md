@@ -26,46 +26,42 @@ It plans tasks, writes code, runs tests, reads failures, fixes bugs, learns from
 
 | | DaoismCode | Claude Code | Cursor | Devin |
 |---|---|---|---|---|
-| **Model Routing** | Six-engine smart router (95% accuracy) | Single model | Single model | Single model |
-| **Multimodal Vision** | GLM-4.6V (Golden Core) + `/paste` clipboard | ✅ | ✅ | ✅ |
-| **Agentic Loop** | Plan → Execute → Verify → Fix (self-correcting) | Basic loop | Basic loop | Advanced loop |
+| **Underlying Model** | GLM-5.2/4.7/4.6V | Claude 4 Sonnet/Opus | Multi-model (Claude/GPT/Gemini) | Claude 4 |
+| **Model Quality** | Good (GLM coding SOTA) | **Best** (Claude 4 = coding king) | Best (user picks) | Best |
+| **Model Routing** | ✅ Six-engine smart router (auto-select cheapest sufficient model) | ❌ Single model | ❌ Manual select | ❌ Single model |
+| **Cost** | **Free** (GLM Coding Plan) | $20/mo | $20/mo | $500/mo |
+| **Agentic Loop** | Plan → Execute → Verify → Fix | Advanced loop + skills | Inline completion | Advanced autonomous |
+| **IDE Integration** | ❌ Terminal only | ❌ Terminal + VS Code | ✅ Native IDE | ❌ Browser |
+| **Browser Control** | ❌ | ✅ Computer Use | ❌ | ✅ Full browser |
+| **Multimodal Vision** | GLM-4.6V + `/paste` | ✅ Native | ✅ Native | ✅ Native |
+| **Parallel Agents** | `parallel_subagents` (up to 4x) + synthesis | ✅ Subagents | ❌ | ✅ Multi-agent |
+| **Multi-Agent Competition** | ✅ `/arena` — 3 agents compete, judge picks winner | ❌ | ❌ | ❌ |
+| **Memory / Learning** | Reflexion (error patterns) + Project Memory + Tool-Chain learning | ✅ CLAUDE.md + memory | ❌ | ❌ |
+| **Goal-Driven Loop** | ✅ `/goal` — evaluator + **quantitative verification** (runs actual tests) | ✅ `/goal` (LLM-only check) | ❌ | ❌ |
+| **Time-Driven Loop** | ✅ `/loop` — full agent per tick + adaptive interval | ✅ `/loop` (LLM-only) | ❌ | ❌ |
+| **Auto-Fix on Save** | ✅ `/watch` — file watcher + targeted fix + auto-commit | ❌ | ❌ | ❌ |
+| **Test Generation** | ✅ `/test` — auto-generate + fix + run | ❌ | ✅ Inline | ❌ |
+| **Code Review** | ✅ `/review` — 6-dimension | ✅ Built-in | ✅ Partial | ✅ |
+| **Codebase Scan** | ✅ `/scan` — security/bugs/perf/debt | ❌ | ❌ | ❌ |
+| **Semantic Search** | GLM embedding-3 vector search | ❌ | ✅ Codebase indexing | ❌ |
+| **Git Archaeology** | ✅ `/why` — blame + hotspot + LLM report | ❌ | ❌ | ❌ |
+| **Flow Tracing** | ✅ `/flow` — AST call graph + cycle detection | ❌ | ❌ | ❌ |
+| **Code Guardian** | ✅ `/guard` — 13 security rules + real-time | ❌ | ❌ | ❌ |
+| **Web Dashboard** | ✅ `/dash` — cyberpunk real-time telemetry | ❌ | ❌ | ✅ Browser |
 | **Sisyphus Mode** | 500 steps + unlimited fixes + auto-continue | ❌ | ❌ | ❌ |
-| **Parallel Agents** | Auto-detect + parallel_subagents (up to 4x) + quality control | ❌ | ❌ | ❌ |
-| **Self-Reflection** | Reflexion memory (learns from failures) + Project Memory (architecture/pitfalls) | ❌ | ❌ | ❌ |
-| **TDD Mode** | Test-first enforcement | ❌ | ❌ | ❌ |
-| **Test Generation** | `/test` — auto-generate + auto-fix + run | ❌ | ❌ | ❌ |
-| **Code Review** | `/review` — 6-dimension automated review | ❌ | Partial | Partial |
-| **Codebase Scan** | `/scan` — security/bugs/performance/debt/missing tests | ❌ | ❌ | ❌ |
-| **Impact Analysis** | Cross-file dependency tracking (JS/TS/Python/Java) | ❌ | ❌ | Partial |
-| **Semantic Search** | GLM embedding-3 vector search (find code by meaning) | ❌ | ❌ | ❌ |
-| **Interactive Decisions** | `ask_user` — single & multi-select keyboard panel | ❌ | ❌ | ❌ |
-| **Structural Search** | `code_search` — 10 patterns, 6 languages | ❌ | ❌ | ❌ |
-| **GitHub Search** | `search_github` — real-world code examples | ❌ | ❌ | ❌ |
-| **Git Archaeology** | `/why` — blame analysis + hotspot + LLM report | ❌ | ❌ | ❌ |
-| **Flow Tracing** | `/flow` — AST call graph + cross-file + cycle detection | ❌ | ❌ | ❌ |
-| **Code Guardian** | `/guard` — 13 security rules + perf + dead code + typesafety | ❌ | Partial | ❌ |
-| **Multi-Agent Team** | `/team` — Architect→FE+BE→Tester→Reviewer pipeline | ❌ | ❌ | Partial |
-| **Git Safety Net** | Auto-snapshot + diff guard + rollback | ❌ | ❌ | ❌ |
-| **Completion Gate** | 5-dimensional verification before "done" | Manual | Manual | Partial |
-| **Renderer** | Custom ANSI (pure TS, zero FFI) | Terminal | Electron IDE | Browser |
-| **Deployment** | Single 103 MB standalone `.exe` | npm package | Desktop app | Cloud SaaS |
+| **MCP Support** | ✅ 12 built-in servers | ✅ **100+ servers** | ❌ | ❌ |
+| **Plugin System** | ✅ `.daoismcode/plugins/*.ts` | ✅ Skills system | ❌ | ❌ |
+| **Team Shared Memory** | ✅ Git-synced pitfalls + decisions | ❌ | ❌ | ❌ |
+| **Smart Symbol Jump** | ✅ `/jump` — NL → AST symbol | ❌ | ✅ Go-to-symbol | ❌ |
+| **Auto PR Gen** | ✅ `/pr` — diff → title + summary + risk | ❌ | ❌ | ✅ |
+| **Conversation Forking** | ✅ `/fork` — branch dialogue | ❌ | ❌ | ❌ |
+| **CI Review Mode** | ✅ `--ci` non-interactive | ❌ | ❌ | ✅ |
+| **Incremental Compaction** | Merge-only-new (60%+ token savings) | Full re-summary | N/A | Full re-summary |
 | **Session Security** | AES-256-GCM + gzip, machine-bound | Plaintext | Local DB | Cloud |
-| **Tool Execution** | Parallel (`Promise.all`) | Sequential | Sequential | Sequential |
-| **Cost Efficiency** | ~56% savings via auto-routing | Full price | Full price | Subscription |
-| **Incremental Compaction** | Merge-only-new summary (60%+ token savings) | Full re-summary | Full re-summary | Full re-summary |
-| **Diff-aware Edits** | Edit results include unified diff (no re-read needed) | ❌ | ❌ | ❌ |
-| **Tool-Chain Learning** | Tracks success rate of tool sequences, recommends optimal paths | ❌ | ❌ | ❌ |
-| **Sub-Agent Synthesis** | LLM merges parallel results (dedup + resolve + sort) | ❌ | ❌ | ❌ |
-| **Smart Symbol Jump** | `/jump` — natural language → AST symbol location | ❌ | ❌ | ❌ |
-| **Auto PR Gen** | `/pr` — git diff → title + summary + testing + risk | ❌ | ❌ | ❌ |
-| **Monorepo Aware** | `/mono` — detect workspaces, assign agents per package | ❌ | ❌ | ❌ |
-| **Error Pattern Library** | Categorize + count recurring failures → inject warnings | ❌ | ❌ | ❌ |
-| **Conversation Forking** | `/fork` — branch dialogue, try Plan A vs Plan B | ❌ | ❌ | ❌ |
-| **MCP Marketplace** | 12 built-in servers one-click install | ❌ | ❌ | ❌ |
-| **Team Shared Memory** | Git-synced pitfalls + decisions across team | ❌ | ❌ | ❌ |
-| **CI Review Mode** | Non-interactive `--ci` for PR auto-review | ❌ | Partial | Partial |
-| **Plugin System** | `.daoismcode/plugins/*.ts` custom tools + commands | ❌ | ❌ | ❌ |
-| **Web Dashboard** | `/dash` — cyberpunk real-time telemetry (localhost:9527) | ❌ | ❌ | ❌ |
+| **Deployment** | Single 103 MB standalone `.exe` | npm package | Desktop app | Cloud SaaS |
+| **Chinese Language** | ✅ Native (GLM is Chinese-first) | ⚠️ English-first | ⚠️ English-first | ⚠️ English-first |
+| **Community Size** | Small (growing) | **Large** | **Large** | Medium |
+| **Open Source** | ✅ MIT | ✅ | ❌ | ❌ |
 
 ---
 
